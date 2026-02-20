@@ -1,7 +1,3 @@
-from streamlit_autorefresh import st_autorefresh
-# Refresh every 10 minutes (600,000 milliseconds)
-st_autorefresh(interval=600000, key="datarefresh")
-
 import streamlit as st
 import yfinance as yf
 import requests
@@ -71,4 +67,9 @@ if fng_val is not None:
 else:
     st.info("Waiting for sentiment data...")
 
+
 st.caption("Data provided by Yahoo Finance and CNN Business.")
+
+# App refreshes itself every 10 minutes to get fresh data, as Streamlit only fetches when first loading or when interacting
+time.sleep(600)
+st.rerun()
