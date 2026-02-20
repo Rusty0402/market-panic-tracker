@@ -1,6 +1,7 @@
 import streamlit as st
 import yfinance as yf
 import requests
+import time
 
 st.set_page_config(page_title="Market Sentiment Tracker", page_icon="📈")
 
@@ -14,14 +15,10 @@ def get_vix_data():
         return 0.0
 
 def get_fear_greed():
-    """Fetches Fear & Greed index from an alternative public API cuz CNN sucks and I cant be fucked to scrape from their site directly lol"""
+    """"Fetches Fear & Greed index from an alternative public API cuz CNN sucks and I cant be fucked to scrape from their site directly lol"""
+    # Below is on Dataviz but its connected to CNN so should be okay to use indefinitely.
+    # For the exact CNN Stock index, we use the production endpoint with headers
     try:
-        # Using a reliable third-party aggregator for the CNN data
-        url = "https://api.alternative.me/fng/?limit=1"
-        r = requests.get(url, timeout=5)
-        data = r.json()
-        # Below is on Dataviz but its connected to CNN so should be okay to use indefinitely.
-        # For the exact CNN Stock index, we use the production endpoint with headers:
         cnn_url = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
@@ -62,14 +59,19 @@ if fng_val is not None:
     if vix_val > 25 and fng_val < 25:
         st.success("🔥 **BUY Signal: CAPITULATION**")
         st.write("Both indicators are at extreme levels. Historically, this is a reversal signal.")
+        st.balloons() # Added some flair for the buy signal lol
     else:
         st.info("No extreme signal detected. Currently status: 'Wait and See'")
 else:
     st.info("Waiting for sentiment data...")
 
-
 st.caption("Data provided by Yahoo Finance and CNN Business.")
 
-# App refreshes itself every 10 minutes to get fresh data, as Streamlit only fetches when first loading or when interacting
+# --- REFRESH ---
+# This tells the user the site is waiting
+st.write("---")
+st.caption("Data refreshes every 10 minutes")
+
+# Wait for 600 seconds, then rerun the app
 time.sleep(600)
 st.rerun()
