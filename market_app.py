@@ -61,7 +61,7 @@ if fng_val is not None:
         st.write("Both indicators are at extreme levels. Historically, this is a reversal signal.")
         st.balloons() # Added some flair for the buy signal lol
     else:
-        st.info("No extreme signal detected. Currently status: 'Wait and See'")
+        st.info("No extreme signal detected. Current status: 'Wait and See'")
 else:
     st.info("Waiting for sentiment data...")
 
@@ -75,3 +75,4 @@ st.caption("Data refreshes every 10 minutes")
 # Wait for 600 seconds, then rerun the app
 time.sleep(600)
 st.rerun()
+
